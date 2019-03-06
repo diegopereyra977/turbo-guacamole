@@ -12,8 +12,12 @@ import sys
 import pdb
 import csv
 
+driver = webdriver.Remote(
+          command_executor='http://127.0.0.1:4444',
+            desired_capabilities=DesiredCapabilities.PHANTOMJS)
 
-driver = webdriver.Firefox()
+#driver = webdriver.Firefox()
+
 lista = [] 
 
 class BlogSpider(scrapy.Spider):
@@ -24,7 +28,7 @@ class BlogSpider(scrapy.Spider):
     def parse(self, response):
         for next_item in response.css('li.results-item div > a'):
             yield response.follow(next_item, self.parse_childs)
-            break
+#            break
 
         for next_page in response.css('a.andes-pagination__link'):
             yield response.follow(next_page, self.parse)
@@ -52,7 +56,7 @@ class BlogSpider(scrapy.Spider):
                 "direccion":soap.select_one(".item-title__primary").text,
                 "precio":soap.select_one(".price-tag-fraction").text,
                 "descripcion":soap.select_one("div.item-description__text").text,
-                "specs_list":soap.select_one("ul.specs-list").text,
+                "specs_list":soap.select_one("ul.specs-list"),
 
                 }
         lista.append(obj)
